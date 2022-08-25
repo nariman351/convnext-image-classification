@@ -2,11 +2,13 @@
 
 (The Documentation is not yet complete.)
 
-Technologies Used:
+### Technologies Used:
+
 PyTorch, TensorFlow, ConvNeXt, Feature Extraction, SVM, Logistic Regression, Feed Forward
 Neural Networks, CNN, Bayesian Optimization
 
 
+### Summary:
 • Classified Images in the Cifar-10 dataset using state-of-the-art technologies,
 namely ConvNeXt as a model and feature extractor.
 
