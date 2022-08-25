@@ -1,5 +1,7 @@
 # Image classification on Cifar-10 using ConvNeXt
 
+(The Documentation is not yet complete.)
+
 Technologies Used:
 PyTorch, TensorFlow, ConvNeXt, Feature Extraction, SVM, Logistic Regression, Feed Forward
 Neural Networks, CNN, Bayesian Optimization
