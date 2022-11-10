@@ -113,6 +113,8 @@ The ConvNeXt CNN was trained by Liu et al. [[1]](#1) on the ImageNet-1k dataset,
 
 This section provides a general overview of the process taken to prepare images for the machine learning models, how to implement ConvNeXt for feature extraction, using Bayesian Optimization for hyperparameter tuning, and common performance metrics used to evaluate classification machine learning models. The visual representation of the methodology progression is given in Fig 1. 
 
+![Methodology Diagram](assets/images/Methodology_Diagram.png)
+
 ## 4.1 Datasets
 
 The CIFAR-10 dataset is split into train, validation, and testing sets. The training set is used for adjusting the machine learning model parameters to make classification predictions. The validation set is used for hold-out validation of model performance during the tuning stage in order to select the best model configuration. The test and generalization sets  are only presented to the chosen optimal models after Model Optimization to evaluate the final model performance. Once the models are evaluated on the test and generalization sets, no further tuning or model selections are made. The difference between the test and generalization sets is that the test set comes from the CIFAR-10 dataset and the generalization set is composed of images from different sources. The purpose of the generalization set is to evaluate how models perform on completely novel images outside of the CIFAR-10 dataset. 
