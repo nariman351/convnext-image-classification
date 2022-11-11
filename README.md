@@ -1,6 +1,12 @@
 # Image classification on Cifar-10 using ConvNeXt
 
 
+
+![icon](https://algotech.netlify.app/img/image_class/train.gif)
+
+[Link to ConvNeXt Paper](https://arxiv.org/abs/2201.03545)
+
+
 ### Technologies Used:
 
 PyTorch, TensorFlow, ConvNeXt, Feature Extraction, SVM, Logistic Regression, Feed Forward
