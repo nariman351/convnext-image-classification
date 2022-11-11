@@ -1,6 +1,5 @@
 # Image classification on Cifar-10 using ConvNeXt
 
-(The Documentation is not yet complete.)
 
 ### Technologies Used:
 
@@ -114,16 +113,23 @@ The ConvNeXt CNN was trained by Liu et al. [[1]](#1) on the ImageNet-1k dataset,
 This section provides a general overview of the process taken to prepare images for the machine learning models, how to implement ConvNeXt for feature extraction, using Bayesian Optimization for hyperparameter tuning, and common performance metrics used to evaluate classification machine learning models. The visual representation of the methodology progression is given in Fig 1. 
 
 ![Methodology Diagram](assets/images/Methodology_Diagram.png)
+**Fig. 1** This image provides a general overview of the methodology taken in transforming the raw image files, utilizing transfer learning, optimizing models
+and producing image classifications.
+
 
 ## 4.1 Datasets
 
 The CIFAR-10 dataset is split into train, validation, and testing sets. The training set is used for adjusting the machine learning model parameters to make classification predictions. The validation set is used for hold-out validation of model performance during the tuning stage in order to select the best model configuration. The test and generalization sets  are only presented to the chosen optimal models after Model Optimization to evaluate the final model performance. Once the models are evaluated on the test and generalization sets, no further tuning or model selections are made. The difference between the test and generalization sets is that the test set comes from the CIFAR-10 dataset and the generalization set is composed of images from different sources. The purpose of the generalization set is to evaluate how models perform on completely novel images outside of the CIFAR-10 dataset. 
+
+![tableI](assets/images/tableI.png)
 
 The four sets of image data are outlined in Table I. The CIFAR-10 images are each 32x32 pixel colour images and consist of a balance of airplane, car, bird, cat, deer, frog, horse, ship and truck images. The generalization images are not uniform in size but are all colour images.  The generalization class is a combination of image datasets from  Kaggle and only contains images of the cat, dog, horse and ship classes. 
 
 ## 4.2 Preprocessing
 
 To begin preprocessing, the z-score normalization is used to scale image pixel values, as shown in the following equation (1).
+
+![formula1](assets/images/formula1.png)
 
 Where \(x’\) and \(x\) are the scaled and unscaled values of the \(i\)th element of the \(j\)th image colour channel respectively. The \(\mu\) and \(\sigma\) symbols are the mean and standard deviation of all the samples of the \(j\)th image channel respectively in the train set [[18]](#18). Preprocessing A applies resizing, center cropping, additional augmentation, and z-score normalization  to the train set of images. Resizing all images ensures that all pictures are the same size for model training. The purpose of the additional image augmentation is to reduce models overfitting to the images of the training set and improve the model’s ability to generalize when making predictions for novel images. Finally, normalization of the pixel values is used to prevent small or large pixel values from having disproportionate impacts on model training.
 
@@ -134,6 +140,9 @@ While Preprocessing B also applies resizing, center cropping and z-score normali
 
 The preliminary results of our initial model exploration can be seen on figure 2. The Figure 2 illustrates the accuracy of prediction of different models on CIFAR-10 test set. The models consist of AlexNet [[19]](#19) as a feature extractor in conjunction with LR, ConvNeXt as pre-trained, retrained and feature extractor. ConvNeXt feature extractor is used in conjunction with Neural Networks, SVM, LR, XGBoost, CatBoost, Naive Bayes. There is also one retrained version of ConvNeXt finetuned using Wandb [[20]](#20). The top three models are selected to improve further. ConvNeXt retrained \& pre-trained as stand alone models also are used as a benchmark for our work.
 
+![Fig. 2](assets/images/preliminaryResults.png)
+**Fig. 2 PreliminaryResults**
+
 ## 4.4 ConvNeXt Architecture
 
 The ConvNeXt [[21]](#21) architecture is based on ResNet [[22]](#22). It is a modernized Convolutional neural network model. The modernization techniques used in ConvNeXt are mainly from Vision Transformers [[23]](#23). The foundation is a ResNet-50 that is iteratively improved in both accuracy and performance. The final result achieved a greater accuracy and performance over the ground breaking Vision Transformers model.
@@ -142,9 +151,14 @@ The ConvNeXt [[21]](#21) architecture is based on ResNet [[22]](#22). It is a mo
 
 The traditional approach for machine learning is that the model A will train on the dataset A while the model B will train on the dataset B. Transfer learning [[24]](#24) is a technique in which the model A will train on dataset A then transfer its knowledge and what it has learned to the model B. The model B will now either finetune itself on dataset B or Predict dataset B straight away.
 
+![tableII](assets/images/tableII.png)
+
 ## 4.6 ConvNeXt & Transfer Learning
 
 First, the pre-trained ConvNeXt is loaded. All the gradients of the model get locked so they won't change.  The last layer which is a fully connected network with one thousand neurons gets removed and replaced with fully connected network with 10 neurons. This is because the ImageNet-1k [[25]](#25) which ConvNeXt is trained on has 1000 classes while our dataset only has 10. This modified model will now get trained on CIFAR-10 so the last layer can train on the dataset. We call this model pre-trained ConvNeXt. The simplified structure of ConvNeXt can be seen below in figure 3.
+
+![convnext structure](assets/images/convnextStructure.png)
+**Fig. 3 Simplified ConvNeXt structure**
 
 ## 4.7 Retrained ConvNeXt
 
@@ -173,13 +187,23 @@ Logistic regression [[28]](#28) is a widely used model for solving statistical a
 
 Support Vector Machine (SVM) is a classifier that works well for intricate problems.  Support vector machine requires clear separation of classes. For example, in figure 4 we can see a hyperplane separating the classes. We are trying to maximize the margin to gain accuracy. For this project we mainly focus on the RBF kernel(Radial basis function)[[30]](#30). In RBF, we use linear combinations to approximate multivariate functions. 
 
+![convnext structure](assets/images/svm.jpg)
+**Fig. 4 SVM Example**
+
 ## 4.12 Neural Networks
 
 The main focus in this project are Neural Networks [[32]](#32) where connected neurons form layers. A neuron in a neural network can take input from multiple data nodes. An input and output layer is always there along with multiple hidden layers. The main parameters in this model are Weights and biases. The figure 5 represents the inner workings of Neurons in part (a) as well as fully connected layers in part (b). Several hyperparameters are accounted for here namely, the number of hidden layers and neurons, activation functions, optimizer and its learning rate, cost functions and the number of epochs. Decisions regarding whether to activate a neuron or not are done using activation functions while the optimizer is beneficial for modifying the attributes, weights, learning rate etc. 
 
+
+![nnfunction](assets/images/nnfunction.png)
+**Fig. 5 How Neural Networks function [33]**
+
+
 ## 4.13 Model Optimization
 
 Training and tuning of machine learning model hyperparameters is performed using Bayesian optimization. The benefit of using Bayesian optimization over grid or random search is that after training several initial models, Bayesian optimization directs hyperparameter selection by using the performance results of trained models to create a probabilistic model for the objective function, under the assumption that the results follow a Gaussian distribution [[34]](#34). This directed approach to hyperparameter selection increases the potential of finding a combination of hyperparameters that achieve an optimum performance result for the objective function while exploring a smaller portion of the search area than grid or random search [[35]](#35). In order to have as balanced of a comparison of performance results as possible, the size of the search space and number of Bayesian optimization trials are the same for each model. The minimum number of random samples required for the Bayesian Optimization implemented in this report is given in the following equation (2).
+
+![formula2](assets/images/formula2.png)
 
 Where \(N_{min}\) is the minimum number of random samples required and \(d\) is the number of hyperparameters being tuned [[34]](#34).  This means that Bayesian Optimization only begins after \(d+3\) random configurations have been implemented in order to provide a sufficient starting point for objective function estimation. 
 
@@ -190,17 +214,29 @@ Each model was given a search space of 45 possible combinations of hyperparamete
 
 The hyperparameters that are tuned for SVM include the regularization, gamma and tolerance parameters. The regularization value for SVM determines the size of the impact of the penalty for a boundary that misclassifies an image. The larger the regularization value, the smaller the penalty for misclassification [[36]](#36). The gamma value for the radial basis function SVM kernel is inversely proportional to the distance of the influence training points have on classification; meaning that larger gamma values will result in a lower level of influence in classification than a smaller gamma value when further away from a training point. The tolerance value is the stopping criterion for minimizing the cost function. A smaller tolerance will result in additional attempts at minimization, whereas a larger tolerance value allows the minimization process to stop earlier. The SVM hyperparameters are outlined in Table X. The gamma values are obtained by calculating the scale of the train set,  which Sci-Kit Learn defines using the following equation (3) [[37]](#37).
 
+![formula3](assets/images/formula3.png)
+
 Where \(gamma\) is the SVM RBF gamma value, \(f\) is the number of features, and \(v\) is the variance of the training set.  The values and ranges selected reflect a difference in magnitudes above and below the default values given in Sci-Kit Learn, as the default values indicate a reliable starting point to begin optimization. Each SVM model built is an ensemble of 45 one-vs-one models due to how it is implemented by Sci-Kit learn [[38]](#38). A summary of the search space for the SVM model is given in Table III.
+
+![tableIII](assets/images/tableIII.png)
+
 
 The LR tuned hyperparameters include the regularization parameter, the Elastic-net L1 ratio and the maximum number of allowable iterations. Each of the hyperparameters is summarized in Table IV. Conversely to the SVM regularization parameter, a larger regularization parameter creates a larger penalty for misclassifications of train data [[39]](#39). The Elastic-net ratio determines how much the L1 penalty contributes to the cost function, with a value of one being equivalent to only using the L1 penalty, and a zero value indicating that only the L2 penalty contributes to the loss function [[40]](#40). The difference between the L1 and L2 penalty functions is that the L1 penalty may reduce the number of features used for estimations over the course of training by reducing weights of some features to zero, whereas the L2 penalty will penalize large weights but not drive the weight to zero like L1 [[41]](#41). The maximum iterations determine how many iterations will be performed for minimizing the cost function. The multinomial loss of all classes is used for making predictions since it is being used for multiclass classification [[39]](#39). 
 
+![tableIV](assets/images/tableIV.png)
+
 Finally, the tuneable hyperparameters for the FFNN,shown in Table V, include the number of hidden layers, the number of hidden neurons and learning rate. The hidden layers are used to add additional layers of neurons between the input and output neuron layers of the FFNN. The hidden neurons parameter indicates the number of neurons in the hidden and output layer. The learning rate is used within the Adam optimizer to adjust the rate that the weights and biases are updated by the loss calculated using the cross entropy loss function. The Adam optimizer was selected due to its relatively low memory cost and general success in optimizing models with a large number of features [[42]](#42). The ReLU function was selected for the neuron activation function.
+
+![tableV](assets/images/tableV.png)
 
 The primary selection criteria for the optimum model is having the best validation accuracy. To settle ties on the primary criteria, a secondary selection criteria is having the highest weighted average of  the precision, recall and F1-Score metrics. In the event of a tie for the secondary criteria,  the time required to train the model is the deciding factor; since a simpler model that performs equivalently to a more complex model is advantageous from a computational resource demand perspective.
 
 ## 4.15 Evaluation Metrics
 
 Four commonly used performance metrics used for evaluating classification models are accuracy, precision, recall and F-score.
+
+![formula4-7](assets/images/formula4-7.png)
+
 
 Where \(a\) is the accuracy of the model for the given samples and \(p_i\), \(r_i\) and \(f_i\) are the precision, recall and F-score of the \(i\)th class respectively. The corresponding definitions for \(t_{pi}\), \(t_{ni}\), \(f_{pi}\) and \(f_{ni}\) are the number of true positive, true negative, false positive and false negative classifications of the \(i\)th class respectively. A strong precision measurement indicates that the model has a low false positive rate, meaning that a model will perform well if it does not frequently make false positive predictions for a class [[43]](#43). The recall measurement is used to identify how frequently the model correctly predicts true positive cases for a class [[43]](#43). The F1-score is the weighted average of the precision and recall performance measures. The F1-score is especially useful in the case of imbalanced datasets because it indicates whether the model infrequently makes false positive and true positive predictions for a class [[43]](#43). The weighted average of class precision, recall and F1-score are taken for evaluating model performance according to these metrics. Although the weighted average of recall has been calculated, it will be equal to the overall model accuracy.
 
@@ -212,17 +248,32 @@ Within this section, the results of model optimization and performance on the te
 
 Table VI is used to provide the optimal models found using Bayesian optimization across 15 trials within the search space defined in the methodology for each model. A notable result from the tuning stage is the significantly lower time used in tuning and training SVM and LR models compared to the FFNN. The tuning of SVM and LR are also much more straightforward as there are far fewer hyperparameters to be decided before tuning and training. The LR optimal model was decided using the third criteria of training time, due to a two-way tie of the first two criteria. A five-way and two-way tie for optimal SVM and FFNN models on the first criteria  were decided using the second criteria of highest average of weighted precision, recall, F1-Score metrics.
 
+
+![tableVI](assets/images/tableVI.png)
+
+
 ## 5.2 Final Model Performance Results
 
 Each selected optimal model is evaluated on the test and generalisations sets and compared using accuracy, precision, recall and F1-score. The results of the evaluation are presented in Table VII for the test set and Table VIII for the generalization set. 
 
 A common issue present across all models is the relative difficulty that the models have in distinguishing between similar looking classes. One example of this is the misclassifications of dogs as cats which is depicted for the test and generalization sets in Fig. 6 and Fig. 7 respectively, for the optimized FFNN model classification matrix. This example is intuitively easy to understand as the size and shapes of dogs can vary widely and in certain circumstances could be mistaken for cats. Some misclassifications such as classifying a dog as a car or a frog are less intuitive and possibly indicate a need for additional image augmentation to further improve generalization performance. However, this also highlights the limitations of the performance results obtained on the CIFAR-10 datasets, as image classification in real life scenarios can often require classification of a larger number of classes that have similar attributes. That being noted, the most accurate models for the test and generalization sets were SVM and pre-trained ConvNeXt models respectively. 
 
+![tableVII](assets/images/tableVII.png)
+
+
 # 6. Conclusion
 
-A valuable consideration to take from the model evaluations on the test and generalization sets is that in all cases the optimized models provided a performance increase over the linear layer of neurons in the standard retrained ConvNeXt model. However, the superior performance of the original pre-trained ConvNeXt model does highlight that overfitting to the specific CIFAR-10 images occurred.
+A valuable consideration to take from the model evaluations on the test and generalization sets is that in all cases the optimized models provided a performance increase over the linear layer of neurons in the standard retrained ConvNeXt model. However, the superior performance of the original pre-trained ConvNeXt model does highlight that overfitting to the specific CIFAR-10 images occurred. 
+
+![tableVIII](assets/images/tableVIII.png)
+
 
 Although the performance metrics for the models are quite high using the current evaluations, extending the generalization dataset to include all ten classes may result in a further decline in performance. Additionally, the use of only ten classes provides a benefit of having a limited number of classes with overlapping characteristics.
+
+![remake_cm_test](assets/images/remake_cm_test.png)
+![remake_cm_gen](assets/images/remake_cm_gen.png)
+
+
 
 # 7. References
 
