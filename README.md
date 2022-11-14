@@ -276,7 +276,10 @@ A valuable consideration to take from the model evaluations on the test and gene
 
 Although the performance metrics for the models are quite high using the current evaluations, extending the generalization dataset to include all ten classes may result in a further decline in performance. Additionally, the use of only ten classes provides a benefit of having a limited number of classes with overlapping characteristics.
 
+## Confusion Matrix for Test Set
 ![remake_cm_test](assets/images/remake_cm_test.png)
+
+## Confusion Matrix for generalization Set
 ![remake_cm_gen](assets/images/remake_cm_gen.png)
 
 
